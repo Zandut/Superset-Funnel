@@ -2958,7 +2958,7 @@ class Metrix(BaseSupersetView):
         return self.render_template(
             "superset/basic.html",
             entry="welcome",
-            title="Superset",
+            title="Metrix",
             bootstrap_data=json.dumps(payload, default=utils.json_iso_dttm_ser),
         )
 
