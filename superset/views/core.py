@@ -3186,6 +3186,48 @@ class Superset(BaseSupersetView):
         payload = mydb.db_engine_spec.extra_table_metadata(mydb, table_name, schema)
         return json_success(json.dumps(payload))
 
+    @api
+    @has_access_api
+    @expose("/testconn", methods=["POST", "GET"])
+    def testconn(self):
+        """Tests a sqla connection"""
+        try:
+            db_name = request.json.get("name")
+            uri = request.json.get("uri")
+
+            # if the database already exists in the database, only its safe (password-masked) URI
+            # would be shown in the UI and would be passed in the form data.
+            # so if the database already exists and the form was submitted with the safe URI,
+            # we assume we should retrieve the decrypted URI to test the connection.
+            if db_name:
+                existing_database = (
+                    db.session.query(models.Database)
+                    .filter_by(database_name=db_name)
+                    .first()
+                )
+                if existing_database and uri == existing_database.safe_sqlalchemy_uri():
+                    uri = existing_database.sqlalchemy_uri_decrypted
+
+            # this is the database instance that will be tested
+            database = models.Database(
+                # extras is sent as json, but required to be a string in the Database model
+                extra=json.dumps(request.json.get("extras", {})),
+                impersonate_user=request.json.get("impersonate_user"),
+            )
+            database.set_sqlalchemy_uri(uri)
+
+            username = g.user.username if g.user is not None else None
+            engine = database.get_sqla_engine(user_name=username)
+
+            with closing(engine.connect()) as conn:
+                conn.scalar(select([1]))
+                return json_success('"OK"')
+        except Exception as e:
+            logging.exception(e)
+            return json_error_response(
+                "Connection failed!\n\n" "The error message returned was:\n{}".format(e)
+            )
+
 appbuilder.add_view_no_menu(Superset)
 
 class CssTemplateModelView(SupersetModelView, DeleteMixin):
