@@ -252,6 +252,9 @@ GET_FEATURE_FLAGS_FUNC = None
 # ---------------------------------------------------
 # The file upload folder, when using models with files
 UPLOAD_FOLDER = BASE_DIR + "/app/static/uploads/"
+UPLOAD_CHUNK_SIZE = 4096
+
+ENABLE_CHUNK_ENCODING = False
 
 # The image upload folder, when using models with images
 IMG_UPLOAD_FOLDER = BASE_DIR + "/app/static/uploads/"
@@ -666,6 +669,8 @@ TALISMAN_CONFIG = {
 SESSION_COOKIE_HTTPONLY = True  # Prevent cookie from being read by frontend JS?
 SESSION_COOKIE_SECURE = False  # Prevent cookie from being transmitted over non-tls?
 SESSION_COOKIE_SAMESITE = "Lax"  # One of [None, 'Lax', 'Strict']
+
+SEND_FILE_MAX_AGE_DEFAULT = 60 * 60 * 24 * 365
 
 # URI to database storing the example data, points to
 # SQLALCHEMY_DATABASE_URI by default if set to `None`

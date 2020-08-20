@@ -3282,10 +3282,28 @@ appbuilder.add_link(
     category_label=__("SQL Lab"),
 )
 
+# if self.config["CSV_EXTENSIONS"].intersection(
+#     self.config["ALLOWED_EXTENSIONS"]
+# )
+
 appbuilder.add_link(
     "Upload a CSV",
     label=__("Upload a CSV"),
     href="/csvtodatabaseview/form",
+    icon="fa-upload",
+    category="Sources",
+    category_label=__("Sources"),
+    category_icon="fa-wrench",
+)
+
+# if self.config["EXCEL_EXTENSIONS"].intersection(
+#     self.config["ALLOWED_EXTENSIONS"]
+# )
+
+appbuilder.add_link(
+    "Upload Excel",
+    label=__("Upload Excel"),
+    href="/exceltodatabaseview/form",
     icon="fa-upload",
     category="Sources",
     category_label=__("Sources"),

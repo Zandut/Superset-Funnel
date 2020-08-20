@@ -17,7 +17,9 @@
 # pylint: disable=C,R,W
 import logging
 from typing import List, Optional, Set
+from urllib import parse
 
+from dataclasses import dataclass
 import sqlparse
 from sqlparse.sql import Identifier, IdentifierList, remove_quotes, Token, TokenList
 from sqlparse.tokens import Keyword, Name, Punctuation, String, Whitespace
@@ -28,6 +30,26 @@ ON_KEYWORD = "ON"
 PRECEDES_TABLE_NAME = {"FROM", "JOIN", "DESCRIBE", "WITH", "LEFT JOIN", "RIGHT JOIN"}
 CTE_PREFIX = "CTE__"
 
+@dataclass(eq=True, frozen=True)
+class Table:  # pylint: disable=too-few-public-methods
+    """
+    A fully qualified SQL table conforming to [[catalog.]schema.]table.
+    """
+
+    table: str
+    schema: Optional[str] = None
+    catalog: Optional[str] = None
+
+    def __str__(self) -> str:
+        """
+        Return the fully qualified SQL table name.
+        """
+
+        return ".".join(
+            parse.quote(part, safe="").replace(".", "%2E")
+            for part in [self.catalog, self.schema, self.table]
+            if part
+        )
 
 class ParsedQuery(object):
     def __init__(self, sql_statement):
