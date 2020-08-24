@@ -102,7 +102,7 @@ export default class TableSelector extends React.PureComponent {
       return Promise.resolve({ options });
     }
     return SupersetClient.get({
-      endpoint: encodeURI(`/superset/tables/${this.props.dbId}/` +
+      endpoint: encodeURI(`/metrix/tables/${this.props.dbId}/` +
         `${encodeURIComponent(this.props.schema)}/${encodeURIComponent(input)}`),
     }).then(({ json }) => {
       const options = json.options.map(o => ({
@@ -132,7 +132,7 @@ export default class TableSelector extends React.PureComponent {
     const { dbId, schema } = this.props;
     if (dbId && schema) {
       this.setState(() => ({ tableLoading: true, tableOptions: [] }));
-      const endpoint = encodeURI(`/superset/tables/${dbId}/` +
+      const endpoint = encodeURI(`/metrix/tables/${dbId}/` +
           `${encodeURIComponent(schema)}/${encodeURIComponent(substr)}/${forceRefresh}/`);
        return SupersetClient.get({ endpoint })
         .then(({ json }) => {
@@ -162,7 +162,7 @@ export default class TableSelector extends React.PureComponent {
     const forceRefresh = force || false;
     if (actualDbId) {
       this.setState({ schemaLoading: true });
-      const endpoint = `/superset/schemas/${actualDbId}/${forceRefresh}/`;
+      const endpoint = `/metrix/schemas/${actualDbId}/${forceRefresh}/`;
 
       return SupersetClient.get({ endpoint })
         .then(({ json }) => {

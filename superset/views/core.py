@@ -3051,9 +3051,9 @@ class Metrix(BaseSupersetView):
             )
 
 
-appbuilder.add_view_no_menu(Metrix)
+# appbuilder.add_view_no_menu(Metrix)
 
-class Superset(BaseSupersetView):
+# class Superset(BaseSupersetView):
 
     @api
     @has_access_api
@@ -3228,7 +3228,7 @@ class Superset(BaseSupersetView):
                 "Connection failed!\n\n" "The error message returned was:\n{}".format(e)
             )
 
-appbuilder.add_view_no_menu(Superset)
+appbuilder.add_view_no_menu(Metrix)
 
 class CssTemplateModelView(SupersetModelView, DeleteMixin):
     datamodel = SQLAInterface(models.CssTemplate)
